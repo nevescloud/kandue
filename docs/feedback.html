@@ -155,7 +155,7 @@
                         This is everything that gets added, and you can edit it.
                     </label>
                 </div>
-                <textarea id="diagText" rows="7" aria-label="Settings included with your message"></textarea>
+                <textarea id="diagText" rows="9" aria-label="Settings included with your message"></textarea>
             </div>
 
             <button type="submit" id="send">Continue on GitHub</button>
@@ -198,7 +198,15 @@
     wb:    { re: /^(on|off)$/, label: 'Write back to Canvas' },
     terms: { re: /^(on|off)$/, label: 'Hide past semesters' },
     host:  { re: /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i,
-             label: 'Canvas' }
+             label: 'Canvas' },
+    // Counts of courses by the reporter's enrollment type: never a course name.
+    roles: { re: /^[a-z]+:\d{1,3}(,[a-z]+:\d{1,3})*$/, label: 'Enrolled as',
+             fmt: function (v) {
+               return v.split(',').map(function (pair) {
+                 var kv = pair.split(':');
+                 return (kv[0] === 'ta' ? 'TA' : kv[0]) + ' \u00d7' + kv[1];
+               }).join(', ');
+             } }
   };
 
   function settingsLines() {
@@ -208,7 +216,7 @@
       var spec = ALLOW[key];
       var value = (raw.get(key) || '').trim();
       if (!value || !spec.re.test(value)) return;
-      out.push(spec.label + ': ' + ((spec.say && spec.say[value]) || value));
+      out.push(spec.label + ': ' + (spec.fmt ? spec.fmt(value) : (spec.say && spec.say[value]) || value));
     });
     return out;
   }
