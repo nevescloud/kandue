@@ -96,6 +96,24 @@
         .fallback[hidden] { display: none; }
         .fbnote { font-size: 0.9rem; margin-bottom: 0.5rem; }
         .fallback textarea { min-height: 0; font-size: 0.85rem; background: #F2F5F9; }
+        .diag {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 0.8rem 1rem;
+            margin: 1.1rem 0;
+            font-size: 0.9rem;
+        }
+        .diag[hidden] { display: none; }
+        .diag .row { display: flex; align-items: flex-start; gap: 0.7rem; }
+        .diag input[type=checkbox] { margin-top: 0.3rem; flex: none; accent-color: var(--navy); }
+        .diag textarea {
+            min-height: 0;
+            margin-top: 0.5rem;
+            background: #F2F5F9;
+            font-size: 0.82rem;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        }
+        .verdict { font-weight: 600; color: var(--ink); }
         .ghost {
             margin-top: 0.5rem;
             background: transparent;
@@ -129,6 +147,17 @@
             <textarea id="message" name="message" required maxlength="3000" placeholder="The more specific, the faster it gets fixed."></textarea>
             <p class="hint">For a bug: what you did, what you expected, what you saw instead.</p>
 
+            <div class="diag" id="diag" hidden>
+                <div class="row">
+                    <input type="checkbox" id="incl" checked>
+                    <label for="incl">
+                        <span class="verdict">Include my settings</span><br>
+                        This is everything that gets added, and you can edit it.
+                    </label>
+                </div>
+                <textarea id="diagText" rows="7" aria-label="Settings included with your message"></textarea>
+            </div>
+
             <button type="submit" id="send">Continue on GitHub</button>
             <p class="status" id="status" role="status" aria-live="polite"></p>
             <p class="problem" id="problem" role="alert"></p>
@@ -158,6 +187,53 @@
   // a feature request was thought up on says nothing.
   var VERSION = (new URLSearchParams(location.search).get('v') || '').trim();
   if (!/^\d+\.\d+\.\d+$/.test(VERSION)) VERSION = '';
+  // Settings arrive on the FRAGMENT, which the browser never sends to the
+  // server, so this page learns them without kandue.app being told anything.
+  // Validated against a fixed set for the same reason VERSION is: anyone can
+  // write this URL and whatever survives lands in a public issue.
+  var ALLOW = {
+    mount: { re: /^(overlay|side|popout)$/, label: 'Panel',
+             say: { overlay: 'over the page', side: 'docked', popout: 'its own window' } },
+    theme: { re: /^(system|light|dark)$/, label: 'Theme' },
+    wb:    { re: /^(on|off)$/, label: 'Write back to Canvas' },
+    terms: { re: /^(on|off)$/, label: 'Hide past semesters' },
+    host:  { re: /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i,
+             label: 'Canvas' }
+  };
+
+  function settingsLines() {
+    var raw = new URLSearchParams((location.hash || '').replace(/^#/, ''));
+    var out = VERSION ? ['Kandue v' + VERSION] : [];
+    Object.keys(ALLOW).forEach(function (key) {
+      var spec = ALLOW[key];
+      var value = (raw.get(key) || '').trim();
+      if (!value || !spec.re.test(value)) return;
+      out.push(spec.label + ': ' + ((spec.say && spec.say[value]) || value));
+    });
+    return out;
+  }
+
+  // Measured here rather than passed in: the panel hides the AI affordances on
+  // an ineligible machine rather than offering a button that throws, so "the
+  // quizzes never appeared" and "this laptop cannot run them" look identical
+  // from the outside. The browser can tell them apart; the extension cannot.
+  function fillDiag() {
+    var lines = settingsLines();
+    function render(extra) {
+      var all = lines.concat(extra || []);
+      if (!all.length) return;
+      diagText.value = all.join('\n');
+      diag.hidden = false;
+    }
+    if (typeof LanguageModel === 'undefined' || !LanguageModel.availability) {
+      render(['On-device AI: not supported by this browser', 'Browser: ' + navigator.userAgent]);
+      return;
+    }
+    LanguageModel.availability().then(function (state) {
+      render(['On-device AI: ' + state, 'Browser: ' + navigator.userAgent]);
+    }, function () { render(['Browser: ' + navigator.userAgent]); });
+  }
+
   var form = document.getElementById('form');
   var send = document.getElementById('send');
   var status = document.getElementById('status');
@@ -166,6 +242,10 @@
   var after = document.getElementById('after');
   var fbText = document.getElementById('fbText');
   var ghLink = document.getElementById('ghLink');
+  var diag = document.getElementById('diag');
+  var diagText = document.getElementById('diagText');
+  var incl = document.getElementById('incl');
+  fillDiag();
 
   function issueUrl(kind, text) {
     var first = text.split('\n')[0].trim();
@@ -190,6 +270,9 @@
       return;
     }
     problem.textContent = '';
+    if (!diag.hidden && incl.checked && diagText.value.trim()) {
+      text += '\n\n---\n' + diagText.value.trim();
+    }
     var url = issueUrl(picked.value, text);
 
     // A new tab via an anchor inside the click, not window.location: GitHub
