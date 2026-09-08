@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kandue for Graders Privacy Policy</title>
+    <meta name="description" content="Kandue for Graders' privacy policy: the course is read on the grader's own session, kept in the panel, never written or sent.">
+    <link rel="icon" href="icon.png" type="image/png">
+
+    <style>
+        :root {
+            --navy: #1E3A5F;
+            --navy-2: #2C4F7C;
+            --coral: #E86F5F;
+            --ink: #111827;
+            --muted: #6B7280;
+            --line: #E5E7EB;
+            --bg: #F7F8FA;
+            --card: #FFFFFF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--ink);
+            background: var(--bg);
+            -webkit-font-smoothing: antialiased;
+            padding: 3rem 1.5rem;
+        }
+        a { color: var(--navy); }
+        :focus-visible { outline: 3px solid var(--coral); outline-offset: 2px; border-radius: 4px; }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 2.75rem 2.5rem;
+            box-shadow: 0 8px 30px rgba(17, 24, 39, 0.06);
+        }
+        .brand { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.6rem; }
+        .brand img { width: 36px; height: 36px; border-radius: 8px; }
+        .brand a { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; color: var(--navy); text-decoration: none; }
+        h1 { font-size: 1.8rem; line-height: 1.25; margin-bottom: 0.35rem; }
+        .updated { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.6rem; }
+        h2 { font-size: 1.15rem; margin: 1.8rem 0 0.5rem; }
+        p, li { color: var(--ink); }
+        ul { padding-left: 1.2rem; margin: 0.4rem 0 0.8rem; }
+        li { margin-bottom: 0.55rem; }
+        code { background: #F2F5F9; border: 1px solid var(--line); border-radius: 4px; padding: 0.05em 0.35em; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <div class="brand">
+            <img src="icon.png" alt="" width="36" height="36">
+            <a href="./">Kandue</a>
+        </div>
+        <h1>Privacy Policy</h1>
+        <p class="updated">Kandue for Graders · Last updated: 2026-09-08</p>
+
+        <p>Kandue for Graders shows a TA or instructor which of their students on Canvas LMS still need a grade, longest wait first. It reads the course over your own Canvas session and never writes to it. No backend of its own. Kandue for Students, the companion for the person handing the work in, has <a href="privacy.html">its own policy</a>.</p>
+
+        <h2>What it reads</h2>
+        <p>Your Canvas courses where you are a TA or teacher, and for the one you pick: the sections, the students enrolled (name, login id, section), the TAs and teachers, the assignments, each submission's status, timestamps, score and who graded it, and, if you read the split from them, the course's group sets. That is what the gradebook already shows you, read through Canvas's <code>/api/v1</code> on your signed-in session, so the extension never sees, stores or transmits a password or token. Canvas's submission records carry the submitted text as well; the panel keeps only the status, times, score and grader, and never stores or shows the work itself.</p>
+
+        <h2>Where it stays</h2>
+        <ul>
+            <li><strong>The course stays in the panel.</strong> Students, submissions and grades are read each time the panel opens or refreshes, held while it is open, and gone when it closes. Nothing read from Canvas is written to disk.</li>
+            <li><strong>Settings stay local.</strong> Your Canvas address, the course, who grades whom, and a grading sheet you drop in as a CSV live in <code>chrome.storage.local</code> and clear when you remove the extension.</li>
+            <li><strong>Nothing is transmitted.</strong> The only servers contacted are your own school's Canvas and, if you connect one, Google Sheets. There is no Kandue server, no account, no analytics and no third party.</li>
+        </ul>
+
+        <h2>A grading sheet</h2>
+        <p>If your TA team keeps who-grades-whom in a Google Sheet, pasting its link asks your permission for <code>docs.google.com</code> at that moment, never at install. The sheet is then read over your own Google session, the way Canvas is, with no token and no change to its sharing. Leave the link out and the permission is never asked for.</p>
+
+        <h2>Nothing is written</h2>
+        <p>Every request is a read. The extension enters no grade, posts no comment and sends no message; grading stays in SpeedGrader. It holds no <code>cookies</code> permission and has no path to the token Canvas requires for a write.</p>
+
+        <h2>Students' data</h2>
+        <p>What the panel shows you is what your institution's Canvas already lets you see as a grader, on the device you are signed in on. It makes no copy of it anywhere else. Your institution's rules for that access apply to the panel as they do to SpeedGrader.</p>
+
+        <h2>Not done</h2>
+        <p>No tracking, analytics, or ads. Nothing is sold or shared, because nothing is collected. The extension sets no cookies of its own.</p>
+
+        <h2>Contact</h2>
+        <p>Email <a href="mailto:hello@jonasneves.com">hello@jonasneves.com</a>, or use the <a href="feedback.html">feedback form</a>, which posts in public, so keep students' names out of it. Policy changes are dated above.</p>
+    </main>
+</body>
+</html>

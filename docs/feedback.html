@@ -192,6 +192,8 @@
   // Validated against a fixed set for the same reason VERSION is: anyone can
   // write this URL and whatever survives lands in a public issue.
   var ALLOW = {
+    product: { re: /^(students|graders)$/, label: 'Product',
+               say: { students: 'Kandue for Students', graders: 'Kandue for Graders' } },
     mount: { re: /^(overlay|side|popout)$/, label: 'Panel',
              say: { overlay: 'over the page', side: 'docked', popout: 'its own window' } },
     theme: { re: /^(system|light|dark)$/, label: 'Theme' },

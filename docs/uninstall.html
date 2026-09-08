@@ -197,6 +197,13 @@
   var fbText = document.getElementById('fbText');
   var ghLink = document.getElementById('ghLink');
   var detected = null;
+  // The graders item points here with its product on the fragment; it has no
+  // AI surface, so the AI reason and the browser check would only mislead.
+  var GRADERS = new URLSearchParams((location.hash || '').replace(/^#/, '')).get('product') === 'graders';
+  if (GRADERS) {
+    var aiOpt = form.querySelector('input[name="reason"][value^="The AI features"]');
+    if (aiOpt) aiOpt.closest('label').hidden = true;
+  }
 
   // Why measure here: the quiz and reading aids sit behind Chrome's on-device AI
   // hardware gate (22GB free disk, >4GB VRAM or 16GB RAM + 4 cores, and
@@ -208,7 +215,7 @@
   // permission for this exists, and the API is absent on plenty of browsers, so
   // the whole block stays hidden unless it answers.
   function detect() {
-    if (typeof LanguageModel === 'undefined' || !LanguageModel.availability) return;
+    if (GRADERS || typeof LanguageModel === 'undefined' || !LanguageModel.availability) return;
     LanguageModel.availability().then(function (state) {
       var ok = state !== 'unavailable';
       detected = 'On-device AI: ' + state + '\nBrowser: ' + navigator.userAgent;
@@ -228,10 +235,10 @@
       return;
     }
     problem.textContent = '';
-    var text = picked.value + '.' + (detail.value.trim() ? '\n\n' + detail.value.trim() : '');
+    var text = (GRADERS ? 'Kandue for Graders. ' : '') + picked.value + '.' + (detail.value.trim() ? '\n\n' + detail.value.trim() : '');
     if (detected && incl.checked) text += '\n\n---\n' + detected;
     var url = ISSUE_URL
-      + '&title=' + encodeURIComponent('Uninstalled: ' + picked.value)
+      + '&title=' + encodeURIComponent('Uninstalled' + (GRADERS ? ' (Graders)' : '') + ': ' + picked.value)
       + '&message=' + encodeURIComponent(text);
 
     // A new tab via an anchor inside the click, not window.location: GitHub
