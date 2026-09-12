@@ -1,0 +1,61 @@
+/* Motion for kandue.app. luma.com's, read off the running site 2026-09-12: two curves,
+   and which one applies is a question about the element — --ease for anything the pointer
+   asked for, --rise (expo-out, long) for anything arriving on its own.
+
+   Linked rather than inlined because each page carries its own <style> and this is the one
+   layer all five share — and because a cross-document view transition only runs when both
+   the page being left and the page being entered opt in. */
+
+:root {
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --rise: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Navigating between these pages is a document swap, which is a blank frame and then the
+   new page. Chrome cross-fades the two documents instead; every other engine ignores the
+   at-rule and keeps the instant swap it has today. */
+@view-transition { navigation: auto; }
+
+::view-transition-old(root) { animation: kd-vt-out 0.18s var(--ease) both; }
+::view-transition-new(root) { animation: kd-vt-in 0.45s var(--rise) both; }
+@keyframes kd-vt-out { to { opacity: 0; } }
+@keyframes kd-vt-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* The hero is what a first visit lands on, so it arrives rather than being there: the
+   copy first, the screenshot a beat behind it. */
+.hero-inner > * { animation: kd-rise 0.8s var(--rise) both; }
+.hero-inner > :nth-child(2) { animation-delay: 0.12s; }
+
+/* Cards meet the scroll instead of waiting at the bottom of it, each driven by its own
+   position in the viewport rather than a timer. The @supports guard is load-bearing, not
+   politeness: where there is no view timeline these same rules would play once on load,
+   which on a page this long means most of them animating out of sight. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .feature,
+    .shot-feature,
+    .shot,
+    .step,
+    .faq details {
+      animation: kd-rise 1ms var(--rise) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+  }
+}
+
+@keyframes kd-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Each page's own <style> ends with a reduced-motion block that cancels transitions; these
+   are animations, and a view transition is neither. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none !important; }
+}
