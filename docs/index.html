@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kandue: two panels for Canvas</title>
     <meta name="description" content="Two Chrome extensions for Canvas LMS. Kandue for Students puts every deadline in one panel, ranked, with practice quizzes written by Chrome's built-in AI on your own machine. Kandue for Graders shows a TA which students still wait on a grade, longest wait first. No signup, no API key, and no server of ours.">
-    <!-- The family mark, not a product icon: the two extensions' icons are one
-         glyph on #A61B29 and #1D63C7, and this is that glyph on both. Using
-         either product's icon as the site's makes the other one the guest. -->
+    <!-- The family mark, not a product icon: using either product's icon as the
+         site's makes the other one the guest. It is the shipped cap on both
+         product colours, split, and it carries the page's accent red and blue
+         rather than the darker ones the store icons ship on (#962427, #244E96)
+         because this band is navy and #244E96 on it disappears.
+
+         SVG first: the PNG is a 128px render of the same file, kept for
+         browsers that will not take an SVG favicon, where a 16px tab icon
+         downscaled from 128 is a haze either way. -->
+    <link rel="icon" href="icon-family.svg" type="image/svg+xml">
     <link rel="icon" href="icon-family.png" type="image/png">
 
     <!-- Social sharing -->
@@ -70,7 +77,9 @@
            half, which left the top right of the band empty. */
         .hero-top { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: end; }
         .brand { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.6rem; }
-        .brand img { width: 40px; height: 40px; border-radius: 9px; }
+        /* No border-radius: the mark carries its own corners (28 of 128, so 8.75px
+           here) and a CSS clip over them cuts the same curve twice. */
+        .brand img { width: 40px; height: 40px; }
         .brand span { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.01em; }
         .hero h1 {
             font-size: 3rem;
@@ -265,7 +274,7 @@
     <header class="hero">
         <div class="hero-inner">
             <div class="brand">
-                <img src="icon-family.png" alt="" width="40" height="40">
+                <img src="icon-family.svg" alt="" width="40" height="40">
                 <span>Kandue</span>
             </div>
             <div class="hero-top">

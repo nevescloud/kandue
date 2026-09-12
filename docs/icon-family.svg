@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+<!--
+  The family mark: the shipped cap on both product colours, split.
+
+  Vector because the mark it replaces was lifted out of students/icon-128.png
+  with a luminance level (-level 35%,92%), which read the source's antialiased
+  edges as partial alpha: the board carried a blue fringe where the split
+  showed through it, and every size came off one 128px raster. The shape here
+  is measured off that same icon, so it is the shipped cap and not a redraw:
+
+    squircle   alpha edge fits a circular corner, inset 1, radius 28
+    board      rhombus, apex (63,33), widest row y=54 spanning x 18..108,
+               bottom point (63,75)
+    bowl       top edge is the board's lower edges dropped 5, walls at x 41
+               and 85, floor reaching y 91 at centre
+    rim        the outer hairline, y 72..86 at x 36..38 and mirrored, floor
+               at y 94
+    tassel     cord x 100 from the board's lower-right edge, bead, fringe
+               widening to x 96..104 by y 91
+
+  The colours are the page accents (#A61B29, #1D63C7), NOT the colours the two
+  store icons ship on (#962427 students, #244E96 graders). The one place this
+  mark is used is the navy hero band, and #244E96 against #1E3A5F is a badge
+  that disappears. docs/index.html has claimed these are the icon colours; they
+  are not, and the icons are otherwise pixel-identical to each other.
+-->
+  <defs><clipPath id="sq"><rect x="1" y="1" width="126" height="126" rx="28"/></clipPath></defs>
+  <g clip-path="url(#sq)">
+    <rect width="128" height="128" fill="#A61B29"/>
+    <path d="M128 0 L128 128 L0 128 Z" fill="#1D63C7"/>
+    <path fill="#fff" d="M63 33 L108 54 L63 75 L18 54 Z"/>
+    <path fill="#fff" d="M41 70 L63 80 L85 70 L85 81 C85 88.5 75.5 91.5 63 91.5 C50.5 91.5 41 88.5 41 81 Z"/>
+    <path fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"
+          d="M37 72 V84 C37 90.5 48.5 94 63 94 C77.5 94 89 90.5 89 84 V72"/>
+    <path fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" d="M100 58 V76"/>
+    <ellipse fill="#fff" cx="100" cy="79.5" rx="2.3" ry="3.6"/>
+    <path fill="#fff" d="M97.8 83 L102.2 83 L103.8 88.6 C103.8 91.4 96.2 91.4 96.2 88.6 Z"/>
+  </g>
+</svg>
