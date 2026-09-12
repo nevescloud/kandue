@@ -21,10 +21,14 @@
 @keyframes kd-vt-out { to { opacity: 0; } }
 @keyframes kd-vt-in { from { opacity: 0; transform: translateY(8px); } }
 
-/* The hero is what a first visit lands on, so it arrives rather than being there: the
-   copy first, the screenshot a beat behind it. */
+/* The hero is what a first visit lands on, so it arrives rather than being there:
+   mark, then headline, then the chooser, which is the one thing the hero is
+   actually asking the visitor to act on. Addressed by class, not :nth-child: the
+   delay used to sit on the second child for a hero screenshot that has since been
+   removed, which left it landing on the headline and the chooser with none. */
 .hero-inner > * { animation: kd-rise 0.8s var(--rise) both; }
-.hero-inner > :nth-child(2) { animation-delay: 0.12s; }
+.hero-inner > .hero-top { animation-delay: 0.10s; }
+.hero-inner > .chooser  { animation-delay: 0.22s; }
 
 /* Cards meet the scroll instead of waiting at the bottom of it, each driven by its own
    position in the viewport rather than a timer. The @supports guard is load-bearing, not

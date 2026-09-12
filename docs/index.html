@@ -5,16 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kandue: two panels for Canvas</title>
     <meta name="description" content="Two Chrome extensions for Canvas LMS. Kandue for Students puts every deadline in one panel, ranked, with practice quizzes written by Chrome's built-in AI on your own machine. Kandue for Graders shows a TA which students still wait on a grade, longest wait first. No signup, no API key, and no server of ours.">
-    <link rel="icon" href="icon.png" type="image/png">
+    <!-- The family mark, not a product icon: the two extensions' icons are one
+         glyph on #A61B29 and #1D63C7, and this is that glyph on both. Using
+         either product's icon as the site's makes the other one the guest. -->
+    <link rel="icon" href="icon-family.png" type="image/png">
 
     <!-- Social sharing -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Kandue: two panels for Canvas">
     <meta property="og:description" content="One panel for the student handing work in, one for the TA grading it. Both read your own Canvas session, with no account to create and no server of ours.">
     <!-- og:image must be absolute: scrapers resolve it with no base document, so a
-         bare filename silently yields a preview card with no image. -->
-    <meta property="og:image" content="https://kandue.app/ss1.png">
-    <meta property="og:image:alt" content="The Kandue panel listing Canvas assignments by due date">
+         bare filename silently yields a preview card with no image.
+         It is an authored 1200x630 card carrying both panels, not a screenshot:
+         scrapers crop to about 1.91:1, so the portrait ss1.png that was here
+         previewed as a centre band of the students panel and the site carries
+         two products. Regenerate with scripts/site-assets.sh, beside the panel
+         captures. -->
+    <meta property="og:image" content="https://kandue.app/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="The Kandue for Students panel beside the Kandue for Graders panel, under the line: Two panels for Canvas">
     <meta property="og:url" content="https://kandue.app/">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -135,8 +145,14 @@
         .product-head .titles { flex-grow: 1; min-width: 14rem; }
         .product-head h2 { font-size: 1.7rem; font-weight: 800; letter-spacing: -0.015em; line-height: 1.2; }
         .product-head .who { color: var(--muted); font-weight: 600; font-size: 0.95rem; }
-        #students { --accent: var(--students); }
-        #graders  { --accent: var(--graders); }
+        /* The accent has to survive the head band scrolling off, or the page has
+           nothing below it saying which product's screenshots these are. It
+           carries into every badge, step and screenshot field inside the run. */
+        #students { --accent: var(--students); --accent-2: #C0303D; }
+        #graders  { --accent: var(--graders);  --accent-2: #3E82DD; }
+        .product .feature .badge,
+        .product .step-badge { background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%); }
+        .product .step { border-left-color: var(--accent); }
 
         /* ── Features ─────────────────────────────────────────── */
         .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; }
@@ -153,14 +169,33 @@
         .feature p { color: var(--muted); font-size: 0.96rem; }
 
         /* ── Screenshots ──────────────────────────────────────── */
+        /* The capture fills a tinted field and runs off the bottom of it, instead
+           of floating in white with the caption centred beside it. A panel
+           screenshot is portrait and three lines of caption are not, so matching
+           the card's height to the image left about 400px of empty white in
+           every one of these. Cropping the foot of a panel costs nothing: the
+           .shot cards below show each one whole. */
         .shot-feature {
-            display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 2rem; align-items: center;
+            display: grid; grid-template-columns: 1fr 1fr; align-items: stretch;
             background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-            padding: 2rem; margin-bottom: 1.4rem;
+            overflow: hidden; margin-bottom: 1.4rem;
         }
-        .shot-feature img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); box-shadow: 0 12px 30px -12px rgba(0,0,0,0.25); }
-        .shot-feature h4 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem; }
-        .shot-feature p { color: var(--muted); }
+        .shot-media {
+            background: var(--bg);
+            background: color-mix(in srgb, var(--accent) 7%, #fff);
+            border-right: 1px solid var(--line);
+            display: flex; align-items: flex-end; justify-content: center;
+            padding: 2rem 2rem 0; min-height: 340px;
+        }
+        .shot-media img {
+            width: 100%; max-width: 330px; height: auto; display: block;
+            border: 1px solid var(--line); border-bottom: 0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 -12px 34px -16px rgba(0,0,0,0.35);
+        }
+        .shot-copy { padding: 2rem; align-self: center; }
+        .shot-copy h4 { font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .shot-copy p { color: var(--muted); }
         .shot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem; }
         .shot {
             background: var(--card); border: 1px solid var(--line); border-radius: 12px;
@@ -199,8 +234,10 @@
         .faq details[open] summary { border-bottom: 1px solid #f3f4f6; }
         .faq p { padding: 0.9rem 1.1rem; margin: 0; color: #374151; }
         .req { list-style: none; display: grid; gap: 0.6rem; }
-        .req li { display: flex; align-items: center; gap: 0.6rem; color: #374151; }
-        .req li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+        .req li { display: flex; align-items: flex-start; gap: 0.6rem; color: #374151; }
+        /* Top-aligned, not centred: these items wrap to two lines, and a dot
+           floating beside the middle of a wrapped line reads as unattached. */
+        .req li::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--coral); flex-shrink: 0; margin-top: 0.62em; }
 
         .closing { border-top: 1px solid var(--line); padding-top: 3rem; }
         .closing h2 { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
@@ -215,6 +252,7 @@
             .hero-top { grid-template-columns: 1fr; gap: 1rem; align-items: start; }
             .chooser { grid-template-columns: 1fr; }
             .shot-feature { grid-template-columns: 1fr; }
+            .shot-media { border-right: 0; border-bottom: 1px solid var(--line); }
             .product-head { padding: 1.2rem; }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -227,7 +265,7 @@
     <header class="hero">
         <div class="hero-inner">
             <div class="brand">
-                <img src="icon.png" alt="" width="40" height="40">
+                <img src="icon-family.png" alt="" width="40" height="40">
                 <span>Kandue</span>
             </div>
             <div class="hero-top">
@@ -319,7 +357,7 @@
                     <div class="feature">
                         <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
                         <h4>No Kandue server</h4>
-                        <p>Kandue has no backend and no account to create, and no database of ours holds your coursework. Assignments are read from your school's Canvas straight into your browser and stay there. Ranking happens in the extension, and quizzes are written by Chrome's own AI model on your computer. Your school's Canvas is the only server Kandue contacts.</p>
+                        <p>Your school's Canvas is the only server Kandue contacts. There is no backend of ours and no account to create: assignments are read straight into your browser and stay there, ranking happens in the extension, and quizzes are written by Chrome's own AI model on your computer.</p>
                     </div>
                 </div>
             </section>
@@ -329,16 +367,16 @@
                 <p class="sub">A panel that sits beside the page you're on, or over it if you'd rather. Read your deadlines, see what to start, and quiz yourself without leaving Canvas.</p>
 
                 <div class="shot-feature">
-                    <img src="ss1.png" width="1120" height="1386" alt="The Kandue panel showing overdue, due-today and upcoming counts, an announcements row, and assignments listed with their course, urgency chip and hour estimate" loading="lazy" decoding="async">
-                    <div>
+                    <div class="shot-media"><img src="ss1.png" width="1120" height="1386" alt="The Kandue panel showing overdue, due-today and upcoming counts, an announcements row, and assignments listed with their course, urgency chip and hour estimate" loading="lazy" decoding="async"></div>
+                    <div class="shot-copy">
                         <h4>Everything due, in one place</h4>
                         <p>Overdue, due today and coming up, counted across every course, with announcements you haven't read sitting above the list.</p>
                     </div>
                 </div>
 
                 <div class="shot-feature">
-                    <img src="ss-priorities.png" width="560" height="687" alt="The Kandue assignment queue with a lab, an exam and a reading ranked Critical, High and Medium, each with an hour estimate and a one-line reason" loading="lazy" decoding="async">
-                    <div>
+                    <div class="shot-media"><img src="ss-priorities.png" width="560" height="687" alt="The Kandue assignment queue with a lab, an exam and a reading ranked Critical, High and Medium, each with an hour estimate and a one-line reason" loading="lazy" decoding="async"></div>
+                    <div class="shot-copy">
                         <h4>Know what to start</h4>
                         <p>Your week ranked by what actually matters first, each task with an hour estimate and one line on why it's there. Tell it how long something really took and the estimates adjust to you.</p>
                     </div>
@@ -414,7 +452,7 @@
                     </details>
                     <details>
                         <summary>Canvas has its own AI study tools now. How is this different?</summary>
-                        <p>Instructure sells AI-generated flashcards and practice quizzes, but only in its top Canvas tier, which most schools don't buy. For most students those tools aren't actually there. Kandue's practice quizzes work regardless of what your school purchased, and they are generated on your own computer instead of a vendor's servers. They cost nothing.</p>
+                        <p>Instructure sells AI-generated flashcards and practice quizzes, but only in its top Canvas tier, so having them is a purchase your school either made or didn't, and not something you can turn on. Kandue's practice quizzes work whatever tier your school is on, they are written on your own computer rather than on a vendor's servers, and they cost nothing.</p>
                     </details>
                     <details>
                         <summary>Can my school or instructor tell I'm using it?</summary>
@@ -489,8 +527,8 @@
                 <p class="sub">Fictional course, invented students: nothing in these captures comes from a real Canvas course.</p>
 
                 <div class="shot-feature">
-                    <img src="ss-grading-queue.png" width="560" height="820" alt="The Kandue for Graders queue: counters reading 2 waiting 7+ days, 17 to grade and 2 handed in early, then cards for HW0, HW1 and Lab 2, each naming how many of the grader's eight students still need a grade and how long the longest has waited" loading="lazy" decoding="async">
-                    <div>
+                    <div class="shot-media"><img src="ss-grading-queue.png" width="560" height="820" alt="The Kandue for Graders queue: counters reading 2 waiting 7+ days, 17 to grade and 2 handed in early, then cards for HW0, HW1 and Lab 2, each naming how many of the grader's eight students still need a grade and how long the longest has waited" loading="lazy" decoding="async"></div>
+                    <div class="shot-copy">
                         <h4>Who is waiting on you</h4>
                         <p>Every assignment with students of yours still to grade, the longest wait at the top. Each card says how many of your students it is waiting on, and how long the first of them has waited.</p>
                     </div>
@@ -529,6 +567,15 @@
                         </ol>
                     </div>
                 </div>
+            </section>
+
+            <section class="section">
+                <h3>Requirements</h3>
+                <ul class="req">
+                    <li>Desktop Google Chrome, or a Chromium-based browser. Chrome extensions don't run on Chrome for Android or iOS.</li>
+                    <li>An active TA or teacher enrollment in the course. Kandue lists only the courses Canvas has you grading, so the ones you are just taking never show up in it.</li>
+                    <li>Nothing from the other TAs. It works out who grades whom from what your course already has, so no one else has to install it or change how they work.</li>
+                </ul>
             </section>
 
             <section class="section">
